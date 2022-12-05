@@ -154,7 +154,7 @@ def userDraw(cardDeck, userHand):
         print(f'Current hand value: {countHand(userHand)}')
         decision = input("Do you want to hit or stand? (H/S):")
         if decision == 'H' or decision == 'h':  # if user wants another card
-            userHand.push(cardDeck.pop())  # add card from cardDeck to userHand
+            userHand.append(cardDeck.pop())  # add card from cardDeck to userHand
             print("User has been granted another card. ")
         elif decision == 'S' or decision == 's':
             print("User has chosen to stand")
@@ -173,10 +173,10 @@ def dealerDraw(cardDeck, dealerHand):
     while countHand(dealerHand) < 21:  # while hand value under 21
         print(f'Current hand: {dealerHand}')
         print(f'Current hand value: {countHand(dealerHand)}')
-        if countHand(dealerHand) > 21:  # REPLACE LATER
-            print(f"BUSTED!")
-            print("Current hand: {dealerHand}")
-            print("Hand value: {countHand(dealerHand)}")
+        if countHand(dealerHand) > 21:  
+            print(f"Dealer busted!!")
+            print(f"Current hand: {dealerHand}")
+            print(f"Hand value: {countHand(dealerHand)}")
         elif countHand(dealerHand) == 21:
             print("BLACKJACK!, Dealer wins! bestter luck next time")
         else:
@@ -192,3 +192,4 @@ def revealDealerCards(userHand, dealerHand):
 
 
 main()
+

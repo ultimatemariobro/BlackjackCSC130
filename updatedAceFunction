@@ -1,0 +1,18 @@
+def countHand(hand):
+    """counts card value of hand. returns calculated value INT
+    arguments: listStack hand of cards (1-9, a, j, q, k)"""
+    score = 0
+    face = ['J', 'Q', 'K']
+    ace = 0
+    for card in hand:
+        if card in range(11):
+            score += card
+        elif card in face:
+            score += 10
+        else:
+            score += 11
+            ace += 1
+    while ace and score > 21:
+        score -= 10
+        ace -= 1
+    return int(score)

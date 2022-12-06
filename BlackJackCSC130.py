@@ -186,7 +186,7 @@ def userDraw(cardDeck, userHand):
 def dealerDraw(cardDeck, dealerHand):  # NOT COMPLETE
     """dealer draws cards until 17 or greater.
     returns: -1 if dealer bust, otherwise returns hand value."""
-    print(f'DEALER HAND: {dealerHand}')
+    print(f'Dealer hand: {dealerHand}')
     while countHand(dealerHand) <= 17:  # while hand value under 21
         print('Dealer draws a card...')
         dealerHand.append(cardDeck.pop())
@@ -197,21 +197,22 @@ def dealerDraw(cardDeck, dealerHand):  # NOT COMPLETE
         print(f"Dealer busted! You win!")
         return -1
     elif countHand(dealerHand) == 21:
-        print("BLACKJACK! Dealer wins! better luck next time")  # might change this line
+        print("BLACKJACK! Dealer wins! Better luck next time chump..")  # might change this line
         return countHand(dealerHand)
     else:
         return countHand(dealerHand)
 
 
 def findWinner(userValue, dealerValue):
+    print("Final score values:")
     if userValue > dealerValue:
-        print(F'user: {userValue}, dealer: {dealerValue}')
+        print(F'Player: {userValue}, Dealer: {dealerValue}')
         print("USER WINS!")
     elif userValue < dealerValue:
-        print(F'user: {userValue}, dealer: {dealerValue}')
+        print(F'Player: {userValue}, Dealer: {dealerValue}')
         print("DEALER WINS!")
     elif userValue == dealerValue:
-        print(F'user: {userValue}, dealer: {dealerValue}')
-        print("PUSH! it's a tie!")
+        print(F'Player: {userValue}, dealer: {dealerValue}')
+        print("PUSH! it's a tie! Sucks to suck.")
 
 main()

@@ -1,0 +1,18 @@
+Welcome to Blackjack!
+
+The goal of this game is to get a higher hand than the dealer.
+If you go over 21, you lose!
+
+• face cards count as 10
+• numbered cards count as their indicated value (ex. 3 is worth 3)
+• You can "hit" to draw another card
+• You can "stand" to keep your current hand
+• There are 5 decks of cards shuffled into the main stack.
+
+
+After the user draws their cards, the dealer will then draw theirs.
+
+It's important to know that the dealer will not draw cards if their
+hand value is greater than 17.
+
+Good luck! Have fun!

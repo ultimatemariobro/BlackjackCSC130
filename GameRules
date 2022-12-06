@@ -1,0 +1,13 @@
+print("       Welcome to Blackjack       ")
+userIn = int(input('Press 1 to read the rules of the game or 2 to start: '))
+if userIn == 1:
+    print("- Number cards [2, 9] counts as their value\n"
+          "- Face cards [Q, J, K] counts as 10\n"
+          "- Ace counts initially as 11 if cards total exceeds 21 then Ace counts as 1\n"
+          "- Dealer has to keep drawing cards if the total is 17 and less\n"
+          "- Player can draw as many cards as they want till they bust\n"
+          "- If dealt 2 Aces one of them counts as 1")
+    input("To start the game press 2: ")
+    print("Game Started!")
+else:
+    print("Game Started!")

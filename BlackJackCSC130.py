@@ -1,5 +1,4 @@
-# author: Coleman Pilkington
-# Supported by: Mario and Zineb
+# authors: Coleman, Mario and Zineb
 # CSC 130 final group Project
 # 29 NOV 2022
 
@@ -10,21 +9,63 @@ import random
 
 
 def main():
-    cardDeck = ListStack(
-        [2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8,
-         9, 10, 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A', 'J', 'Q', 'K', 'A'])
+    startingDeck = [2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    'J', 'Q', 'K', 'A',
+                    'J', 'Q', 'K', 'A',
+                    'J', 'Q', 'K', 'A',
+                    'J', 'Q', 'K', 'A']
+    cardDeck = ListStack(startingDeck)
 
     endGame = 0
     while endGame < 1:
-        print("game started")
+        userHand = []
+        dealerHand = []  # the hand of the player is an empty list to be filled and get extracted from
+        print("\n\t\tWelcome to Blackjack!\n")
+
         shufflesRemain = random.randint(5, 120)
         while shufflesRemain > 0:
             shuffle(cardDeck)
             shufflesRemain -= 1
-        dealCards(cardDeck)                         # Function to deal cards to both user and dealer
-        print(f'Dealer {dealCards(cardDeck)[1]}')            
-        userDraw(cardDeck, dealCards(cardDeck)[0])
-        endGame += int(gameEnder())
+
+        dealCards(cardDeck, userHand, dealerHand)  # Function to deal cards to both user and dealer
+        print(f'Dealer hand: [{dealerHand[0]}, ?]')
+        userValue = userDraw(cardDeck, userHand)  # ask the user if they want to hit or stand
+        if userValue > -1:
+            dealerValue = dealerDraw(cardDeck, dealerHand)
+            if dealerValue > -1:
+                findWinner(userValue, dealerValue)
+        endGame = gameEnder()
+
+
+def dealCards(cardDeck, userHand, dealerHand):
+    """add doc about returns userHand, dealerHand"""
+    # add shuffle function here maybe for both players hands?????
+    userHand.append(cardDeck.pop())  # card gets pushed to the top of the stack and removes it from the list
+    dealerHand.append(cardDeck.pop())
+    userHand.append(cardDeck.pop())
+    dealerHand.append(cardDeck.pop())
+
+    return userHand, dealerHand
+
+
+def aceOr11(userHand, dealerHand):
+    if len(userHand) == 2:  # if the player has 2 cards
+        if userHand[0] == 11 and userHand[1] == 11:  # both cards are ace
+            userHand[0] = 1  # 1st card counts as 1
+            userHand -= 10  # update user hand total by subtracting 10
+    #
+    if len(dealerHand) == 2:
+        if dealerHand[0] == 11 and dealerHand[1] == 11:
+            dealerHand[1] = 1  # 2nd card ace overrated to 1
+            dealerHand -= 10
+            
+    # if handvalue > 21
+        # ace in hand
+        # hand value -= 1
+    return userHand, dealerHand
 
 
 def gameEnder():
@@ -32,15 +73,16 @@ def gameEnder():
     validAnswer = 0
     returnValue = 0
     while validAnswer < 1:
-        answer = input("Play again? Y or N  ")
+        answer = input("Play again?(Y or N): ")
         answer = answer.upper()
         if answer != "Y" and answer != "N":
             print("invalid answer")
         elif answer.upper == 'Y':
-            validAnswer = 1
-            returnValue = 0
+            validAnswer = 1     # Not used???
+            returnValue = 1
         elif answer.upper() == 'N':
-            validAnswer = 1
+            print("Thank you for playing! Come again.")
+            validAnswer = 1     # Not used???
             returnValue = 1
         return returnValue
 
@@ -49,7 +91,7 @@ def countHand(hand):
     """counts card value of hand. returns calculated value INT
     arguments: listStack hand of cards (1-9, a, j, q, k)"""
     score = 0
-    face = ['J', 'Q', 'K']              
+    face = ['J', 'Q', 'K']
     ace = 0  # ignore for now
     for card in hand:
         if card in range(11):
@@ -112,67 +154,64 @@ def shuffle(cardDeck):
                 cardDeck.push(list6.pop())
 
 
-def dealCards(cardDeck):
-    """add doc about returns userHand, dealerHand"""
-    userHand = ListStack()
-    dealerHand = ListStack()        
-    # add shuffle function here maybe for both players hands
-    userHand.push(cardDeck.pop())           # card gets pushed to the top of the stack and removes it from the list 
-    dealerHand.push(cardDeck.pop())
-    userHand.push(cardDeck.pop())
-    dealerHand.push(cardDeck.pop())
-
-    if len(userHand) == 2:  # if the player has 2 cards
-        if userHand[0] == 11 and userHand[1] == 11:  # both cards are ace
-            userHand[0] = 1  # 1st card counts as 1
-            userHand -= 10  # update user hand total by subtracting 10
-    #
-    if len(dealerHand) == 2:
-        if dealerHand[0] == 11 and dealerHand[1] == 11:
-            dealerHand[1] = 1  # 2nd card ace overrated to 1
-            dealerHand -= 10
-
-    return userHand, dealerHand
-
 def userDraw(cardDeck, userHand):
+    """ user draws cards until bust or stand.
+    RETURNS: -1 for bust, hand value for stand."""
     while countHand(userHand) < 21:  # while hand value under 21
-        print(f'current hand: {userHand}')
+        print(f'Player hand: {userHand}')
         print(f'Current hand value: {countHand(userHand)}')
-        decision = input('Do you want to draw another card?: (YES/NO) ')
-        if decision.upper() == 'YES':  # if user wants another card
-            userHand.push(cardDeck.pop())  # add card from cardDeck to userHand
-        else:
+        decision = input("Do you want to hit or stand? (H/S): ")
+        if decision.upper() == "H":  # if user wants another card
+            userHand.append(cardDeck.pop())  # add card from cardDeck to userHand
+            print("Player hits ")
+            print("_______________________________________________")
+        elif decision.upper() == "S":
+            print("Player stands")
+            print("_______________________________________________")
             break
+        else:
+            print("Bug here!")
+
     if countHand(userHand) > 21:  # REPLACE LATER
-        print(f"BUSTED!     current hand: {userHand}       hand value: {countHand(userHand)}")
-    elif countHand(userHand) == 21:
-        print('BLACKJACK!')
+        print("Busted!")
+        print(f"Current hand: {userHand}")
+        print(f"Final hand value: {countHand(userHand)}")
+
+
+        return -1
     else:
-        print(countHand(userHand))
+        return countHand(userHand)
 
 
-def dealerDraw(cardDeck, dealerHand):
-    while countHand(dealerHand) < 21:  # while hand value under 21
-        print(f'current hand: {dealerHand}')
+def dealerDraw(cardDeck, dealerHand):  # NOT COMPLETE
+    """dealer draws cards until 17 or greater.
+    returns: -1 if dealer bust, otherwise returns hand value."""
+    print(f'DEALER HAND: {dealerHand}')
+    while countHand(dealerHand) <= 17:  # while hand value under 21
+        print('Dealer draws a card...')
+        dealerHand.append(cardDeck.pop())
+        print(f'Dealer hand: {dealerHand}')
         print(f'Current hand value: {countHand(dealerHand)}')
-        decision = input('Do you want to draw another card?: (YES/NO) ')
-        if decision.upper() == 'YES':  # if user wants another card
-            dealerHand.push(cardDeck.pop())  # add card from cardDeck to userHand
-        else:
-            break
-    if countHand(dealerHand) > 21:  # REPLACE LATER
-        print(f"BUSTED!     current hand: {dealerHand}       hand value: {countHand(dealerHand)}")
+
+    if countHand(dealerHand) > 21:
+        print(f"Dealer busted! You win!")
+        return -1
     elif countHand(dealerHand) == 21:
-        print('BLACKJACK!')
+        print("BLACKJACK! Dealer wins! better luck next time")  # might change this line
+        return countHand(dealerHand)
     else:
-        print(countHand(dealerHand))
-
-def revealDealerCards(userHand, dealerHand):
-    if len(dealerHand) == 2:
-        return dealerHand[0]
-    elif len(dealerHand) > 2:
-        return dealerHand[0], dealerHand[1]
+        return countHand(dealerHand)
 
 
-if __name__ == __name__:
-    main()
+def findWinner(userValue, dealerValue):
+    if userValue > dealerValue:
+        print(F'user: {userValue}, dealer: {dealerValue}')
+        print("USER WINS!")
+    elif userValue < dealerValue:
+        print(F'user: {userValue}, dealer: {dealerValue}')
+        print("DEALER WINS!")
+    elif userValue == dealerValue:
+        print(F'user: {userValue}, dealer: {dealerValue}')
+        print("PUSH! it's a tie!")
+
+main()
